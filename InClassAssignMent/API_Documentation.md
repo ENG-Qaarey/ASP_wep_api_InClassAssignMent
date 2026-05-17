@@ -1,78 +1,94 @@
 # InClassAssignMent API Documentation
 
-This document outlines the available API endpoints for the `InClassAssignMent` Web API, as well as essential database migration commands.
-
-## Essential EF Core Migration Commands
-
-- **Update Database (Apply Migrations):** `dotnet ef database update`
-- **Create New Migration:** `dotnet ef migrations add <MigrationName>`
-- **Remove Last Migration:** `dotnet ef migrations remove`
+## Overview
+This is a comprehensive ASP.NET Core Web API built with Entity Framework Core and PostgreSQL. The application manages Customers, Vehicles, and Services.
 
 ---
 
-## API Endpoints
-
-### 1. Customers API (`/api/Customers`)
-
-#### `GET /api/Customers`
-- **Description:** Retrieves a list of all customers, including their owned vehicles.
-- **Response:** `200 OK` (JSON array of `Customar` objects)
-
-#### `GET /api/Customers/{id}`
-- **Description:** Retrieves a specific customer by their ID.
-- **Parameters:** `id` (integer) - The customer's ID.
-- **Response:** `200 OK` (JSON object) or `404 Not Found`
-
-#### `POST /api/Customers`
-- **Description:** Creates a new customer.
-- **Request Body:** JSON object containing `Name`, `Email`, and `Phone`.
-- **Response:** `201 Created`
+## 🚀 Swagger UI & Postman
+- **Swagger UI URL:** `https://localhost:7051/swagger` (View and test your API in the browser)
+- **Postman Import URL:** `https://localhost:7051/swagger/v1/swagger.json` (Import into Postman to instantly generate all requests)
 
 ---
 
-### 2. Vehicles API (`/api/Vehicles`)
+## 🗄️ Database Commands
+The project is configured to use **PostgreSQL**.
+Migrations will automatically apply when the application starts up!
 
-#### `GET /api/Vehicles`
-- **Description:** Retrieves a list of all vehicles, including the customer they belong to and their associated service types.
-- **Response:** `200 OK` (JSON array of `Vehicles` objects)
-
-#### `GET /api/Vehicles/{id}`
-- **Description:** Retrieves a specific vehicle by its ID.
-- **Parameters:** `id` (integer) - The vehicle's ID.
-- **Response:** `200 OK` (JSON object) or `404 Not Found`
-
-#### `POST /api/Vehicles`
-- **Description:** Creates a new vehicle and associates it with a customer.
-- **Request Body:** JSON object containing `Make`, `Model`, `Year`, and `CustomarId`.
-- **Response:** `201 Created`
+If you ever need to manually create new migrations, open your Package Manager Console and run:
+```powershell
+Add-Migration YourMigrationName
+Update-Database
+```
 
 ---
 
-### 3. Service Types API (`/api/ServiceTypes`)
+## 📡 API Endpoints (CRUD)
 
-#### `GET /api/ServiceTypes`
-- **Description:** Retrieves a list of all available service types (e.g., Oil Change, Tire Rotation).
-- **Response:** `200 OK` (JSON array of `ServiceType` objects)
+All controllers fully support **Create (POST)**, **Read (GET)**, **Update (PUT)**, and **Delete (DELETE)** operations.
 
-#### `GET /api/ServiceTypes/{id}`
-- **Description:** Retrieves a specific service type by its ID.
-- **Parameters:** `id` (integer) - The service type's ID.
-- **Response:** `200 OK` (JSON object) or `404 Not Found`
+### 1. Customers
+- `GET https://localhost:7051/api/CustomersController` - Get all customers
+- `GET https://localhost:7051/api/CustomersController/{id}` - Get a specific customer
+- `POST https://localhost:7051/api/CustomersController` - Create a new customer
+- `PUT https://localhost:7051/api/CustomersController/{id}` - Update a customer
+- `DELETE https://localhost:7051/api/CustomersController/{id}` - Delete a customer
 
-#### `POST /api/ServiceTypes`
-- **Description:** Creates a new service type.
-- **Request Body:** JSON object containing `Name`, `Description`, and `Cost`.
-- **Response:** `201 Created`
+**POST/PUT Body (JSON):**
+```json
+{
+  "name": "string",
+  "email": "string",
+  "phone": "string"
+}
+```
 
----
+### 2. Vehicles
+- `GET https://localhost:7051/api/VehiclesController` - Get all vehicles
+- `GET https://localhost:7051/api/VehiclesController/{id}` - Get a specific vehicle
+- `POST https://localhost:7051/api/VehiclesController` - Create a new vehicle
+- `PUT https://localhost:7051/api/VehiclesController/{id}` - Update a vehicle
+- `DELETE https://localhost:7051/api/VehiclesController/{id}` - Delete a vehicle
 
-### 4. Vehicle Service Types API (`/api/VehicleServiceTypes`)
+**POST/PUT Body (JSON):**
+```json
+{
+  "make": "string",
+  "model": "string",
+  "year": 0,
+  "customarId": 0
+}
+```
 
-#### `GET /api/VehicleServiceTypes`
-- **Description:** Retrieves a list of all service records (which vehicle got which service).
-- **Response:** `200 OK` (JSON array of `VehicleServiceType` objects, including `Vehicle` and `ServiceType` details)
+### 3. Service Types
+- `GET https://localhost:7051/api/ServiceTypesController` - Get all service types
+- `GET https://localhost:7051/api/ServiceTypesController/{id}` - Get a specific service type
+- `POST https://localhost:7051/api/ServiceTypesController` - Create a new service type
+- `PUT https://localhost:7051/api/ServiceTypesController/{id}` - Update a service type
+- `DELETE https://localhost:7051/api/ServiceTypesController/{id}` - Delete a service type
 
-#### `POST /api/VehicleServiceTypes`
-- **Description:** Creates a new service record connecting a vehicle and a service type.
-- **Request Body:** JSON object containing `VehicleId`, `ServiceTypeId`, and `ServiceDate`.
-- **Response:** `200 OK`
+**POST/PUT Body (JSON):**
+```json
+{
+  "name": "string",
+  "description": "string",
+  "cost": 0
+}
+```
+
+### 4. Vehicle Service Types
+- `GET https://localhost:7051/api/VehicleServiceTypesController` - Get all service records
+- `GET https://localhost:7051/api/VehicleServiceTypesController/{id}` - Get a specific service record
+- `POST https://localhost:7051/api/VehicleServiceTypesController` - Create a new service record
+- `PUT https://localhost:7051/api/VehicleServiceTypesController/{id}` - Update a service record
+- `DELETE https://localhost:7051/api/VehicleServiceTypesController/{id}` - Delete a service record
+
+**POST/PUT Body (JSON):**
+```json
+{
+  "vehicleId": 0,
+  "serviceTypeId": 0,
+  "serviceDate": "2023-10-01T00:00:00Z"
+}
+```
+*(Note: Ensure your ServiceDate ends with `Z` to denote a UTC timestamp for PostgreSQL)*
